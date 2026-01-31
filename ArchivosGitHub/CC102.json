@@ -1,0 +1,91 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {
+    "text": "Model Performance Comparison",
+    "subtitle": "Predicting next-year deforestation (hectares)",
+    "anchor": "start",
+    "fontSize": 16,
+    "fontWeight": 600,
+    "subtitleFontSize": 12,
+    "subtitleColor": "#666"
+  },
+  "width": 500,
+  "height": 300,
+  "config": {
+    "font": "Manrope",
+    "axis": {
+      "labelFontSize": 11,
+      "titleFontSize": 12
+    },
+    "legend": {
+      "labelFontSize": 11,
+      "titleFontSize": 12
+    }
+  },
+  "data": {
+    "values": [
+      {"model": "Linear Regression", "metric": "R²", "value": 0.709, "display": "0.71"},
+      {"model": "Random Forest", "metric": "R²", "value": 0.805, "display": "0.81"},
+      {"model": "SVM", "metric": "R²", "value": 0.078, "display": "0.08"},
+      {"model": "Linear Regression", "metric": "MAE", "value": 170, "display": "170"},
+      {"model": "Random Forest", "metric": "MAE", "value": 101, "display": "101"},
+      {"model": "SVM", "metric": "MAE", "value": 180, "display": "180"},
+      {"model": "Linear Regression", "metric": "RMSE", "value": 555, "display": "555"},
+      {"model": "Random Forest", "metric": "RMSE", "value": 454, "display": "454"},
+      {"model": "SVM", "metric": "RMSE", "value": 988, "display": "988"}
+    ]
+  },
+  "transform": [
+    {
+      "calculate": "datum.metric == 'R²' ? datum.value * 1000 : datum.value",
+      "as": "normalized"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "model",
+      "type": "nominal",
+      "title": null,
+      "axis": {"labelAngle": 0},
+      "sort": ["Linear Regression", "Random Forest", "SVM"]
+    },
+    "xOffset": {"field": "metric", "type": "nominal"},
+    "y": {
+      "field": "normalized",
+      "type": "quantitative",
+      "title": "Value (R² scaled ×1000)",
+      "scale": {"domain": [0, 1000]}
+    },
+    "color": {
+      "field": "metric",
+      "type": "nominal",
+      "title": "Metric",
+      "scale": {
+        "domain": ["R²", "MAE", "RMSE"],
+        "range": ["#2D5A3D", "#7BC47F", "#c4e0c4"]
+      }
+    },
+    "tooltip": [
+      {"field": "model", "title": "Model"},
+      {"field": "metric", "title": "Metric"},
+      {"field": "display", "title": "Value"}
+    ]
+  },
+  "layer": [
+    {
+      "mark": {"type": "bar", "cornerRadiusTopLeft": 3, "cornerRadiusTopRight": 3}
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": -8,
+        "fontSize": 10,
+        "fontWeight": 500
+      },
+      "encoding": {
+        "text": {"field": "display"},
+        "color": {"value": "#333"}
+      }
+    }
+  ]
+}
